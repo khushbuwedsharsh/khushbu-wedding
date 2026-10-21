@@ -13,6 +13,7 @@
 @media(max-width:650px){.section{padding:68px 17px}.event-grid{grid-template-columns:1fr}.venue-card{grid-template-columns:1fr}.map-frame{min-height:280px;grid-row:1}.venue-copy{padding:28px 23px}.gallery-grid{gap:8px}.photo{border-width:3px}.photo:nth-child(2){margin-top:18px}.photo:nth-child(3){margin-top:36px}.family-grid{grid-template-columns:1fr}.hero-date{letter-spacing:.18em}.hero:before{inset:10px}.hero:after{inset:18px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 
+#languageToggle{position:fixed;top:14px;right:16px;z-index:20;border:1px solid var(--gold);background:var(--wine);color:var(--gold);border-radius:999px;padding:10px 15px;font-size:.75rem;font-weight:600;letter-spacing:.04em;box-shadow:0 4px 16px #0002;cursor:pointer}
 .guest-greeting{font:1.35rem 'Cormorant Garamond',serif;color:#f1dfbd;margin:18px auto 8px;padding:10px 18px;max-width:520px;border-top:1px solid rgba(217,181,109,.65);border-bottom:1px solid rgba(217,181,109,.65);letter-spacing:.04em}.guest-greeting:empty{display:none}.guest-greeting .guest-label{display:block;font: .58rem Montserrat,sans-serif;text-transform:uppercase;letter-spacing:.24em;color:#d9b56d;margin-bottom:5px}
 .hero-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
 .photo{cursor:zoom-in}.photo svg{transition:transform .5s}.photo:hover svg{transform:scale(1.04)}
@@ -20,6 +21,7 @@
 </style>
 </head>
 <body>
+<button id="languageToggle" type="button" aria-label="Change language">हिन्दी / English</button>
 <section class="hero" id="home">
   <div class="palace-art" aria-hidden="true">
   <svg viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -180,7 +182,7 @@ weddingAudio.addEventListener('ended',()=>{musicOn=false;document.getElementById
 
 // Scratch card canvas, scaled for high-DPI screens and mouse/touch input.
 const canvas=document.getElementById('scratchCanvas'), area=document.getElementById('scratchArea');let ctx, drawing=false, scratched=0;
-function setupScratch(){const r=area.getBoundingClientRect(),dpr=window.devicePixelRatio||1;canvas.width=r.width*dpr;canvas.height=r.height*dpr;canvas.style.width=r.width+'px';canvas.style.height=r.height+'px';ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);const grad=ctx.createLinearGradient(0,0,r.width,r.height);grad.addColorStop(0,'#d7b56c');grad.addColorStop(.5,'#f4dfaa');grad.addColorStop(1,'#b78b45');ctx.fillStyle=grad;ctx.fillRect(0,0,r.width,r.height);ctx.fillStyle='#5a2b24';ctx.font='600 13px Montserrat, sans-serif';ctx.textAlign='center';ctx.fillText('SCRATCH HERE ✦',r.width/2,r.height/2+5);ctx.strokeStyle='rgba(255,250,230,.6)';ctx.lineWidth=1;for(let x=0;x<r.width;x+=12){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+50,r.height);ctx.stroke()}}
+function setupScratch(){const r=area.getBoundingClientRect(),dpr=window.devicePixelRatio||1;canvas.width=r.width*dpr;canvas.height=r.height*dpr;canvas.style.width=r.width+'px';canvas.style.height=r.height+'px';ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);const grad=ctx.createLinearGradient(0,0,r.width,r.height);grad.addColorStop(0,'#d7b56c');grad.addColorStop(.5,'#f4dfaa');grad.addColorStop(1,'#b78b45');ctx.fillStyle=grad;ctx.fillRect(0,0,r.width,r.height);ctx.fillStyle='#5a2b24';ctx.font='600 13px Montserrat, sans-serif';ctx.textAlign='center';ctx.fillText(document.documentElement.lang==='hi'?'यहाँ खुरचें ✦':'SCRATCH HERE ✦',r.width/2,r.height/2+5);ctx.strokeStyle='rgba(255,250,230,.6)';ctx.lineWidth=1;for(let x=0;x<r.width;x+=12){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+50,r.height);ctx.stroke()}}
 function scratchAt(e){if(!drawing)return;const r=canvas.getBoundingClientRect(),p=e.touches?e.touches[0]:e;const x=p.clientX-r.left,y=p.clientY-r.top;ctx.globalCompositeOperation='destination-out';ctx.beginPath();ctx.arc(x,y,22,0,Math.PI*2);ctx.fill();if(++scratched%8===0){const data=ctx.getImageData(0,0,canvas.width,canvas.height).data;let clear=0;for(let i=3;i<data.length;i+=4)if(data[i]<20)clear++;if(clear/data.length*4>.43)canvas.style.opacity='0'}}
 canvas.addEventListener('pointerdown',e=>{drawing=true;canvas.setPointerCapture(e.pointerId);scratchAt(e)});canvas.addEventListener('pointermove',scratchAt);canvas.addEventListener('pointerup',()=>drawing=false);canvas.addEventListener('pointercancel',()=>drawing=false);window.addEventListener('resize',setupScratch);setupScratch();
 
@@ -240,24 +242,126 @@ document.getElementById('closePhotoModal').addEventListener('click', () => photo
 photoModal.addEventListener('click', e => { if(e.target === photoModal) photoModal.classList.remove('open'); });
 document.addEventListener('keydown', e => { if(e.key === 'Escape') photoModal.classList.remove('open'); });
 
-// Guest blessings are prepared for copying; they are not sent or stored by this static page.
-let blessingText = '';
-document.getElementById('blessingForm').addEventListener('submit', e => {
-  e.preventDefault();
-  const name = document.getElementById('blessingName').value.trim();
-  const message = document.getElementById('blessingMessage').value.trim();
-  blessingText = 'A blessing for Khushbu & Harsh\nFrom: ' + name + '\n\n' + message;
-  document.getElementById('blessingStatus').textContent = 'Your blessing is ready. Copy it and send it to the family; this static website does not submit it to a shared guestbook.';
-  document.getElementById('copyBlessing').style.display = 'inline-block';
+// Optional blessings form: attach handlers only if that section exists.
+const blessingForm = document.getElementById('blessingForm');
+if (blessingForm) {
+  let blessingText = '';
+  blessingForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = document.getElementById('blessingName').value.trim();
+    const message = document.getElementById('blessingMessage').value.trim();
+    blessingText = 'A blessing for Khushbu & Harsh\nFrom: ' + name + '\n\n' + message;
+    document.getElementById('blessingStatus').textContent = 'Your blessing is ready. Copy it and send it to the family; this static website does not submit it to a shared guestbook.';
+    document.getElementById('copyBlessing').style.display = 'inline-block';
+  });
+  document.getElementById('copyBlessing')?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(blessingText);
+      document.getElementById('blessingStatus').textContent = 'Blessing copied. Paste it into WhatsApp or a message to the family.';
+    } catch(e) {
+      document.getElementById('blessingStatus').textContent = blessingText;
+    }
+  });
+}
+
+
+// English / Hindi language switch. English is the default; visitors can switch anytime.
+const languageToggle = document.getElementById('languageToggle');
+const languageStrings = [
+  ['.curtain-cta','✦ &nbsp; Tap to enter &nbsp; ✦<br><small style="display:block;margin-top:8px;font-size:.58rem;letter-spacing:.08em">Open the royal invitation</small>','✦ &nbsp; प्रवेश करने के लिए टैप करें &nbsp; ✦<br><small style="display:block;margin-top:8px;font-size:.58rem;letter-spacing:.08em">शाही निमंत्रण खोलें</small>'],
+  ['.eyebrow:nth-of-type(1)','A royal celebration of love','प्रेम का शाही उत्सव'],
+  ['.hero-content > p','Two hearts, one beautiful forever','दो दिल, एक खूबसूरत जीवनभर का साथ'],
+  ['.hero-content .btn','Explore the invitation ↓','निमंत्रण देखें ↓'],
+  ['#invitationSender .eyebrow','Private helper','निजी सुविधा'],
+  ['#invitationSender .section-title','Send a Family Invitation','परिवार को निमंत्रण भेजें'],
+  ['#invitationSender .section-sub','Enter a family name and WhatsApp number to create a personalized link and open a pre-filled WhatsApp message.','परिवार का नाम और WhatsApp नंबर डालें। व्यक्तिगत लिंक और पहले से तैयार संदेश खुलेगा।'],
+  ['label[for="sendGuestName"]','Family / guest name','परिवार / मेहमान का नाम'],
+  ['label[for="sendGuestPhone"]','WhatsApp number with country code','देश कोड सहित WhatsApp नंबर'],
+  ['#makeGuestLink','Create WhatsApp invitation','WhatsApp निमंत्रण बनाएँ'],
+  ['#celebration .eyebrow','With the blessings of Lord Ganesha','श्री गणेश जी के आशीर्वाद से'],
+  ['#celebration .section-title','A New Chapter Begins','एक नए अध्याय की शुरुआत'],
+  ['.intro-card > p:first-child','With hearts full of joy and the blessings of our families, we invite you to join us as <strong>Khushbu</strong> and <strong>Harsh</strong> begin their beautiful journey together.','हर्ष और उल्लास तथा परिवारों के आशीर्वाद के साथ, हम आपको <strong>खुशबू</strong> और <strong>हर्ष</strong> की नई जीवन-यात्रा के शुभारंभ में शामिल होने के लिए सादर आमंत्रित करते हैं।'],
+  ['.intro-card > p:last-child','May this union be blessed with love, harmony and everlasting happiness.','यह नया बंधन प्रेम, सौहार्द और आजीवन सुख-समृद्धि से परिपूर्ण रहे।'],
+  ['.scratch-section .eyebrow','A little surprise','एक छोटा-सा सरप्राइज़'],
+  ['.scratch-section .section-title','Scratch to Reveal','खुरचकर तारीख देखें'],
+  ['.scratch-section .section-sub','A date this special deserves its own little reveal. Use your finger or mouse to scratch away the gold and uncover the wedding date.','इतनी खास तारीख का खुलासा भी खास होना चाहिए। शादी की तारीख देखने के लिए सुनहरी परत को उंगली या माउस से खुरचें।'],
+  ['.scratch-card .eyebrow','Save the date','तारीख याद रखें'],
+  ['.scratch-card h3','Our forever starts on…','हमारा साथ शुरू होगा…'],
+  ['.scratch-under span:first-child','THE WEDDING DAY','शुभ विवाह का दिन'],
+  ['.scratch-under span:last-child','KHUSHBU &amp; HARSH','खुशबू और हर्ष'],
+  ['.scratch-help','✦ Scratch across the panel to reveal the date ✦','✦ तारीख देखने के लिए यहाँ खुरचें ✦'],
+  ['.countdown .eyebrow','The countdown to forever','हमेशा के साथ की उलटी गिनती'],
+  ['.countdown .section-title','Until We Say “I Do”','शुभ विवाह तक'],
+  ['.countdown .wrap > p','Saturday · 12 December 2026','शनिवार · 12 दिसंबर 2026'],
+  ['.time-box:nth-child(1) span','Days','दिन'],['.time-box:nth-child(2) span','Hours','घंटे'],['.time-box:nth-child(3) span','Minutes','मिनट'],['.time-box:nth-child(4) span','Seconds','सेकंड'],
+  ['.events .eyebrow','Rituals, blessings & celebration','रीति-रिवाज़, आशीर्वाद और उत्सव'],
+  ['.events .section-title','The Wedding Festivities','विवाह के उत्सव'],
+  ['.events .section-sub','Every ritual tells a story; every gathering becomes a memory. We would be delighted to celebrate these precious moments with you.','हर रस्म एक कहानी है और हर मिलन एक यादगार पल। इन खास पलों को आपके साथ मनाकर हमें खुशी होगी।'],
+  ['.venue .eyebrow','Join us in Ahmedabad','अहमदाबाद में हमारे साथ जुड़ें'],
+  ['.venue .section-title','The Venue','विवाह स्थल'],
+  ['.venue .section-sub','Your presence will make our celebration even more special.','आपकी उपस्थिति हमारे उत्सव को और भी खास बनाएगी।'],
+  ['.venue-copy .eyebrow','Wedding venue','विवाह स्थल'],
+  ['.venue-copy p:nth-of-type(2)','Please use the map for directions and check your route before leaving.','रास्ता देखने के लिए मैप का उपयोग करें और निकलने से पहले अपना मार्ग जाँच लें।'],
+  ['.venue-actions .btn','Open in Google Maps ↗','Google Maps में खोलें ↗'],
+  ['.gallery .eyebrow','A glimpse of our story','हमारी कहानी की एक झलक'],
+  ['.gallery .section-title','The Photo Gallery','तस्वीरों की झलक'],
+  ['.gallery .section-sub','A little space for the moments that make this love story uniquely theirs.','उन खूबसूरत पलों के लिए एक छोटी-सी जगह, जो उनकी प्रेम कहानी को खास बनाते हैं।'],
+  ['.photo:nth-child(1) .photo-label','A beautiful beginning','एक खूबसूरत शुरुआत'],
+  ['.photo:nth-child(2) .photo-label','Together, always','हमेशा साथ-साथ'],
+  ['.photo:nth-child(3) .photo-label','Our forever','हमारा हमेशा का साथ'],
+  ['.gallery-note','Illustrative placeholders are shown for now. Replace these three panels with the couple’s real photos before sharing the invitation.','अभी उदाहरण वाली तस्वीरें दिखाई गई हैं। निमंत्रण साझा करने से पहले इन्हें जोड़े की असली तस्वीरों से बदलें।'],
+  ['.family .eyebrow','With love and blessings','स्नेह और आशीर्वाद सहित'],
+  ['.family .section-title','Our Families','हमारे परिवार'],
+  ['.family-card:first-child .eyebrow','The bride','वधू'],
+  ['.family-card:first-child p','Daughter of<br><strong>Manju &amp; Rameshji Goyal</strong>','सुपुत्री<br><strong>मंजू एवं रमेशजी गोयल</strong>'],
+  ['.family-card:last-child .eyebrow','The groom','वर'],
+  ['.family-card:last-child p','Son of<br><strong>Daxaben &amp; Vivekanandji Songara</strong>','सुपुत्र<br><strong>दक्षाबेन एवं विवेकानंदजी सोंगरा</strong>'],
+  ['.invited .eyebrow','With warm regards','सादर निमंत्रण'],
+  ['.invited .section-title','Invited By','निमंत्रक'],
+  ['.invited .small-note','We look forward to celebrating this joyous occasion with you and your family.','हम आपके और आपके परिवार के साथ इस मंगल अवसर को मनाने के लिए उत्सुक हैं।'],
+  ['.footer p:first-of-type','12 · 12 · 2026 &nbsp; • &nbsp; MADE WITH LOVE','12 · 12 · 2026 &nbsp; • &nbsp; स्नेह से बनाया गया']
+];
+const originalLanguageHTML = new Map();
+function applyLanguage(lang) {
+  document.documentElement.lang = lang === 'hi' ? 'hi' : 'en';
+  document.title = lang === 'hi' ? 'खुशबू और हर्ष | शाही राजस्थानी विवाह' : 'Khushbu & Harsh | A Royal Rajasthani Wedding';
+  languageStrings.forEach(([selector, en, hi], index) => {
+    const el = document.querySelector(selector);
+    if (!el) return;
+    if (!originalLanguageHTML.has(index)) originalLanguageHTML.set(index, el.innerHTML);
+    el.innerHTML = lang === 'hi' ? hi : originalLanguageHTML.get(index);
+  });
+  document.querySelectorAll('.event').forEach((card, i) => {
+    const hiNames = ['माता पूजन','हल्दी','विनायक एवं मायरा','बड़ी बंदोली','हस्त मिलाप'];
+    const hiDates = ['शुक्रवार, 11 दिसंबर 2026','शुक्रवार, 11 दिसंबर 2026','शुक्रवार, 11 दिसंबर 2026','शुक्रवार, 11 दिसंबर 2026','शनिवार, 12 दिसंबर 2026'];
+    const hiDesc = ['आशीर्वाद, आनंद और सुंदर शुरुआत के लिए प्रार्थना।','हल्दी, खुशियाँ और पीले रंग की रौनक।','परंपरा, परिवार का आशीर्वाद और खुशियों का उत्सव।','संगीत, रंगों और उत्सव से भरी शाम।','वह पावन पल जब दो हाथ और दो परिवार एक हो जाते हैं।'];
+    if (lang === 'hi') {
+      card.querySelector('.number').textContent = ['01 / शुक्रवार','02 / शुक्रवार','03 / शुक्रवार','04 / शुक्रवार','05 / विवाह समारोह'][i];
+      card.querySelector('h3').textContent = hiNames[i];
+      card.querySelectorAll('p')[0].textContent = hiDates[i];
+      card.querySelectorAll('p')[2].textContent = hiDesc[i];
+    } else {
+      card.querySelector('.number').textContent = ['01 / FRIDAY','02 / FRIDAY','03 / FRIDAY','04 / FRIDAY','05 / THE WEDDING CEREMONY'][i];
+      card.querySelector('h3').textContent = ['Mata Pujan','Haldi','Vinayak & Mayra','Badi Bandoli','Hast Milap'][i];
+      card.querySelectorAll('p')[0].textContent = ['Friday, 11 December 2026','Friday, 11 December 2026','Friday, 11 December 2026','Friday, 11 December 2026','Saturday, 12 December 2026'][i];
+      card.querySelectorAll('p')[2].textContent = ['A prayer for blessings, joy and a beautiful beginning.','Sunshine, turmeric and the happiest shades of yellow.','Tradition, family blessings and heartfelt celebration.','An evening filled with music, colour and festive spirit.','The sacred moment two hands join and two families become one.'][i];
+    }
+  });
+  const greetingLabel = document.querySelector('#guestGreeting .guest-label');
+  if (greetingLabel) greetingLabel.textContent = lang === 'hi' ? 'सादर निमंत्रण' : 'A special invitation for';
+  const scratch = document.querySelector('.scratch-under span:first-child');
+  if (scratch) scratch.textContent = lang === 'hi' ? 'शुभ विवाह का दिन' : 'THE WEDDING DAY';
+  languageToggle.textContent = lang === 'hi' ? 'English' : 'हिन्दी';
+  languageToggle.setAttribute('aria-label', lang === 'hi' ? 'Switch to English' : 'हिंदी में बदलें');
+  languageToggle.title = lang === 'hi' ? 'Switch to English' : 'हिंदी में बदलें';
+  if (typeof setupScratch === 'function') { try { setupScratch(); } catch (err) { /* keep language switching usable if scratch canvas cannot reset */ } }
+}
+let currentLanguage = 'en';
+languageToggle.addEventListener('click', () => {
+  currentLanguage = currentLanguage === 'en' ? 'hi' : 'en';
+  applyLanguage(currentLanguage);
 });
-document.getElementById('copyBlessing').addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(blessingText);
-    document.getElementById('blessingStatus').textContent = 'Blessing copied. Paste it into WhatsApp or a message to the family.';
-  } catch(e) {
-    document.getElementById('blessingStatus').textContent = blessingText;
-  }
-});
+applyLanguage(currentLanguage);
 
 </script>
 </body>

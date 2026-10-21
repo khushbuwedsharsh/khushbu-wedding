@@ -40,15 +40,10 @@
 @media(max-width:420px){.hero-flower.one{left:10%}.hero-flower.three{left:8%}.hero-flower.four{right:12%}}
 
 
-/* Romantic flower rain: tiny illustrated petals, not emoji characters */
-.flower-rain{position:fixed;inset:0;z-index:2147483647;overflow:hidden;pointer-events:none;display:none!important}
-.flower-rain.active{display:block!important}
-.rain-flower{position:absolute;top:-15vh;left:var(--x);width:var(--size);height:var(--size);opacity:var(--opacity);animation:flowerFall var(--duration) linear var(--delay) 1 both;will-change:transform,opacity}
-.rain-flower svg{width:100%;height:100%;display:block}
-@keyframes flowerFall{0%{transform:translate3d(0,-8vh,0) rotate(0deg);opacity:0}8%{opacity:var(--opacity)}50%{transform:translate3d(var(--drift),52vh,0) rotate(180deg)}92%{opacity:var(--opacity)}100%{transform:translate3d(calc(var(--drift) * -0.6),115vh,0) rotate(360deg);opacity:0}}
-.flower-rain.scratch-burst .rain-flower{filter:none}
-@media(max-width:600px){.rain-flower{filter:none!important;will-change:transform;animation-timing-function:linear}.rain-flower svg{shape-rendering:geometricPrecision}}
-@media(prefers-reduced-motion:reduce){.rain-flower{animation-duration:24s!important}}
+/* Instant lightweight celebratory fireworks burst */
+#fireworkBurst{position:fixed;inset:0;width:100%;height:100%;z-index:2147483647;pointer-events:none;display:block;opacity:0;transition:opacity .12s}
+#fireworkBurst.show{opacity:1}
+
 
 
 
@@ -238,23 +233,47 @@ const curtains=document.getElementById('curtains'), hero=document.getElementById
 const weddingAudio=document.getElementById('weddingAudio');
 let musicOn=false;
 async function toggleMusic(){const b=document.getElementById('musicBtn');try{if(!musicOn){await weddingAudio.play();musicOn=true;b.classList.add('playing');b.textContent='♫';}else{weddingAudio.pause();musicOn=false;b.classList.remove('playing');b.textContent='♪';}}catch(e){musicOn=false;b.classList.remove('playing');b.textContent='♪';alert('Music could not play. Check that wedding-song.mp3 is uploaded beside index.html, then tap again.');}}
-// Create realistic-looking decorative flowers as SVG shapes and let them fall gently.
-const flowerRain=document.createElement('div');
-flowerRain.id='flowerRain';flowerRain.className='flower-rain';flowerRain.setAttribute('aria-hidden','true');document.body.appendChild(flowerRain);
-const flowerPalettes=[['#d9273b','#ffb1b8','#f5d36e'],['#f4c8d0','#fff0df','#d9b56d'],['#b51f38','#f18b9c','#f4d78d'],['#e7a8b7','#ffe5e9','#d9b56d'],['#f5e0c6','#fff7e9','#c99446']];
-function flowerSvg(colors,lightweight=false){const petals=lightweight?6:10,rx=lightweight?5.2:4.8,ry=lightweight?7:8;return `<svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="${colors[1]}" stroke-width=".8" fill="${colors[0]}">${Array.from({length:petals},(_,i)=>`<ellipse cx="20" cy="10" rx="${rx}" ry="${ry}" transform="rotate(${i*(360/petals)} 20 20)"/>`).join('')}<circle cx="20" cy="20" r="4" fill="${colors[2]}"/></g></svg>`}
-function makeFlowerRain(count){
-  flowerRain.innerHTML='';
-  const mobile=window.matchMedia('(max-width: 600px)').matches || (navigator.hardwareConcurrency && navigator.hardwareConcurrency<=4);
-  const total=count ?? (mobile?30:90);
-  for(let i=0;i<total;i++){
-    const f=document.createElement('span');f.className='rain-flower';const c=flowerPalettes[Math.floor(Math.random()*flowerPalettes.length)];
-    f.style.setProperty('--x',(Math.random()*100)+'%');f.style.setProperty('--size',(mobile?12+Math.random()*12:18+Math.random()*28)+'px');
-    f.style.setProperty('--duration',(mobile?5.5+Math.random()*2.5:3.8+Math.random()*3.5)+'s');f.style.setProperty('--delay',(Math.random()*(mobile?.5:1.4))+'s');
-    f.style.setProperty('--drift',(-45+Math.random()*(mobile?90:180))+'px');f.style.setProperty('--opacity',(0.72+Math.random()*0.28).toFixed(2));f.innerHTML=flowerSvg(c,mobile);flowerRain.appendChild(f);
+// Instant fireworks burst for the scratch reveal (no flower rain / no long delays).
+const fireworkCanvas=document.createElement('canvas');
+fireworkCanvas.id='fireworkBurst';fireworkCanvas.setAttribute('aria-hidden','true');document.body.appendChild(fireworkCanvas);
+const fw=fireworkCanvas.getContext('2d');let fwFrame=0,fwParticles=[];
+function resizeFireworks(){fireworkCanvas.width=Math.round(innerWidth*(devicePixelRatio||1));fireworkCanvas.height=Math.round(innerHeight*(devicePixelRatio||1));fw.setTransform(devicePixelRatio||1,0,0,devicePixelRatio||1,0,0)}
+resizeFireworks();window.addEventListener('resize',resizeFireworks);
+function launchFireworks(){
+  const w=innerWidth,h=innerHeight;
+  const colors=['#ffe8a3','#ffd166','#fff4d6','#f7a8b8','#e7b85c','#ffffff','#ff9f68','#fbe7ff'];
+  fwParticles=[];
+  fireworkCanvas.classList.add('show');
+  cancelAnimationFrame(fwFrame);
+  let frame=0, burstWave=-1;
+  function burst(cx,cy,amount=62){
+    for(let i=0;i<amount;i++){
+      const a=(Math.PI*2*i/amount)+(Math.random()-.5)*.18;
+      const speed=1.6+Math.random()*4.8;
+      fwParticles.push({x:cx,y:cy,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,
+        life:45+Math.random()*45,max:90,r:1.2+Math.random()*2.3,
+        c:colors[Math.floor(Math.random()*colors.length)]});
+    }
   }
+  function draw(){
+    // Add several fresh bursts over ~2.7 seconds.
+    if(frame===0){burst(w*.22,h*.30,68);burst(w*.50,h*.22,76);burst(w*.78,h*.32,68);burstWave=0}
+    if(frame===42){burst(w*.34,h*.42,58);burst(w*.67,h*.40,58);burstWave=1}
+    if(frame===86){burst(w*.16,h*.25,54);burst(w*.50,h*.36,66);burst(w*.84,h*.25,54);burstWave=2}
+    fw.clearRect(0,0,w,h);
+    fwParticles.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.vx*=.986;p.vy=p.vy*.986+.018;p.life--;
+      fw.globalAlpha=Math.max(0,p.life/p.max);
+      fw.fillStyle=p.c;fw.shadowBlur=9;fw.shadowColor=p.c;
+      fw.beginPath();fw.arc(p.x,p.y,p.r,0,Math.PI*2);fw.fill();
+    });
+    fwParticles=fwParticles.filter(p=>p.life>0);
+    fw.globalAlpha=1;fw.shadowBlur=0;frame++;
+    if(frame<165){fwFrame=requestAnimationFrame(draw)}
+    else{fw.clearRect(0,0,w,h);fireworkCanvas.classList.remove('show');fwParticles=[]}
+  }
+  fwFrame=requestAnimationFrame(draw);
 }
-function launchFlowerRain(){makeFlowerRain();flowerRain.classList.add('active','scratch-burst');flowerRain.style.setProperty('display','block','important');setTimeout(()=>{flowerRain.classList.remove('active','scratch-burst');flowerRain.style.removeProperty('display');flowerRain.innerHTML='';},9000)}
 openBtn.addEventListener('click',()=>{curtains.classList.add('open');hero.classList.add('revealed');document.documentElement.style.overflowY='auto';document.body.style.overflowY='auto';setTimeout(()=>{curtains.style.display='none'},1800);toggleMusic()});
 document.getElementById('musicBtn').addEventListener('click',toggleMusic);
 weddingAudio.addEventListener('ended',()=>{musicOn=false;document.getElementById('musicBtn').classList.remove('playing');document.getElementById('musicBtn').textContent='♪'});
@@ -262,8 +281,8 @@ weddingAudio.addEventListener('ended',()=>{musicOn=false;document.getElementById
 // Scratch card canvas, scaled for high-DPI screens and mouse/touch input.
 const canvas=document.getElementById('scratchCanvas'), area=document.getElementById('scratchArea');let ctx,drawing=false,scratched=0,scratchDistance=0,lastScratchPoint=null,scratchRevealed=false;
 function setupScratch(){const r=area.getBoundingClientRect(),dpr=window.devicePixelRatio||1;canvas.width=Math.max(1,Math.round(r.width*dpr));canvas.height=Math.max(1,Math.round(r.height*dpr));canvas.style.width=r.width+'px';canvas.style.height=r.height+'px';ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);const grad=ctx.createLinearGradient(0,0,r.width,r.height);grad.addColorStop(0,'#d7b56c');grad.addColorStop(.5,'#f4dfaa');grad.addColorStop(1,'#b78b45');ctx.globalCompositeOperation='source-over';ctx.fillStyle=grad;ctx.fillRect(0,0,r.width,r.height);ctx.fillStyle='#5a2b24';ctx.font='600 13px Montserrat, sans-serif';ctx.textAlign='center';ctx.fillText(document.documentElement.lang==='hi'?'यहाँ खुरचें ✦':'SCRATCH HERE ✦',r.width/2,r.height/2+5);ctx.strokeStyle='rgba(255,250,230,.6)';ctx.lineWidth=1;for(let x=0;x<r.width;x+=12){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+50,r.height);ctx.stroke()}canvas.style.opacity='1';scratched=0;scratchDistance=0;lastScratchPoint=null;scratchRevealed=false}
-function triggerScratchFlowerRain(){if(scratchRevealed)return;scratchRevealed=true;canvas.style.transition='opacity .25s';canvas.style.opacity='0';launchFlowerRain()}
-function scratchAt(e){if(!drawing||scratchRevealed)return;const r=canvas.getBoundingClientRect();const x=e.clientX-r.left,y=e.clientY-r.top;if(lastScratchPoint){scratchDistance+=Math.hypot(x-lastScratchPoint.x,y-lastScratchPoint.y)}lastScratchPoint={x,y};ctx.globalCompositeOperation='destination-out';ctx.beginPath();ctx.arc(x,y,28,0,Math.PI*2);ctx.fill();scratched++;if(scratched>=7&&scratchDistance>=90)triggerScratchFlowerRain()}
+function triggerScratchFireworks(){if(scratchRevealed)return;scratchRevealed=true;canvas.style.transition='opacity .18s';canvas.style.opacity='0';launchFireworks()}
+function scratchAt(e){if(!drawing||scratchRevealed)return;const r=canvas.getBoundingClientRect();const x=e.clientX-r.left,y=e.clientY-r.top;if(lastScratchPoint){scratchDistance+=Math.hypot(x-lastScratchPoint.x,y-lastScratchPoint.y)}lastScratchPoint={x,y};ctx.globalCompositeOperation='destination-out';ctx.beginPath();ctx.arc(x,y,28,0,Math.PI*2);ctx.fill();scratched++;if(scratched>=7&&scratchDistance>=90)triggerScratchFireworks()}
 canvas.addEventListener('pointerdown',e=>{if(scratchRevealed)return;drawing=true;lastScratchPoint=null;try{canvas.setPointerCapture(e.pointerId)}catch(_){}scratchAt(e);e.preventDefault()});canvas.addEventListener('pointermove',e=>{if(drawing){scratchAt(e);e.preventDefault()}});function endScratch(){drawing=false;lastScratchPoint=null}canvas.addEventListener('pointerup',endScratch);canvas.addEventListener('pointercancel',endScratch);window.addEventListener('resize',()=>{if(!scratchRevealed)setupScratch()});setupScratch();
 
 // Countdown to the local Ahmedabad wedding time (12:39 PM on 12 December 2026).

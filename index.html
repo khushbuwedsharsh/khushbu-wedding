@@ -52,19 +52,19 @@
 
 
 
-/* Function-specific illustrations sit softly behind readable event details. */
-.event{isolation:isolate;overflow:hidden;min-height:220px}
-.event-art{position:absolute;inset:0;z-index:0;opacity:.19;pointer-events:none;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.event-art svg{width:100%;height:100%;min-height:220px;object-fit:cover;display:block}
-.event-copy{position:relative;z-index:1;max-width:100%;}
-.event .number,.event h3,.event p{position:relative;text-shadow:0 1px 0 rgba(255,250,242,.72)}
-.event h3{font-weight:600}
-.event-mata{background:linear-gradient(120deg,#fff8ec 25%,#f7ead8 100%)}
-.event-haldi{background:linear-gradient(120deg,#fff9e8 25%,#f8edc9 100%)}
-.event-mayra{background:linear-gradient(120deg,#fff8ec 25%,#f2e3d0 100%)}
-.event-bandoli{background:linear-gradient(120deg,#fff8ec 25%,#f4dfd7 100%)}
-.event-wedding{background:linear-gradient(120deg,#f8ecd5 25%,#fff8ec 100%)}
-@media(max-width:650px){.event-art{opacity:.14}.event{min-height:205px}.event-art svg{min-height:205px}}
+}
+
+
+/* Function cards use uploaded photo files only; decorative SVG illustrations removed. */
+#functions .event { position:relative; isolation:isolate; overflow:hidden; background-size:cover !important; background-position:center center !important; background-repeat:no-repeat !important; }
+#functions .event.event-mata { background-image: linear-gradient(rgba(42,8,17,.22),rgba(42,8,17,.36)), url('./mata-pujan.jpg') !important; }
+#functions .event.event-haldi { background-image: linear-gradient(rgba(42,8,17,.22),rgba(42,8,17,.36)), url('./haldi.jpg') !important; }
+#functions .event.event-mayra { background-image: linear-gradient(rgba(42,8,17,.22),rgba(42,8,17,.36)), url('./vinayak-mayra.jpg') !important; }
+#functions .event.event-bandoli { background-image: linear-gradient(rgba(42,8,17,.22),rgba(42,8,17,.36)), url('./badi-bandoli.jpg') !important; }
+#functions .event.event-hast { background-image: linear-gradient(rgba(42,8,17,.22),rgba(42,8,17,.36)), url('./hast-milap.jpg') !important; }
+#functions .event .event-copy, #functions .event .number, #functions .event h3, #functions .event p { position:relative; z-index:1; color:#fff8ec !important; text-shadow:0 2px 5px rgba(25,4,8,.75) !important; }
+#functions .event .number { color:#f5d99c !important; }
+@media(max-width:650px){ #functions .event { background-size:cover !important; background-position:center !important; } }
 
 </style>
 </head>
@@ -172,21 +172,17 @@
 </section>
 
 <!-- Function background photos: mata-pujan.jpg, haldi.jpg, vinayak-mayra.jpg, badi-bandoli.jpg, hast-milap.jpg -->
-<section class="section events">
+<section id="functions" class="section events">
  <div class="wrap">
   <div class="reveal"><div class="eyebrow" style="text-align:center">Rituals, blessings & celebration</div><h2 class="section-title">The Wedding Festivities</h2><div class="ornament">✦ ❧ ✦</div><p class="section-sub">Every ritual tells a story; every gathering becomes a memory. We would be delighted to celebrate these precious moments with you.</p></div>
   <div class="event-grid">
    <article class="event reveal event-mata">
-    <div class="event-art" aria-hidden="true"><svg viewBox="0 0 500 180" aria-hidden="true"><g fill="none" stroke="#9b593e" stroke-width="3"><path d="M65 170V65Q65 15 115 15Q165 15 165 65V170M50 170H180M85 65H145M100 45H130"/><path d="M315 170V80Q315 45 350 45Q385 45 385 80V170M295 170H405M335 80H365"/><path d="M220 170V105M205 120H235M210 105L220 85L230 105"/></g><g fill="#d9b56d"><circle cx="115" cy="85" r="12"/><path d="M105 104Q115 92 125 104L135 145H95Z"/><circle cx="350" cy="90" r="9"/><path d="M340 106Q350 98 360 106L370 145H330Z"/><path d="M200 165Q220 140 240 165Z"/></g><g fill="#c58d56"><circle cx="250" cy="48" r="4"/><circle cx="270" cy="70" r="3"/><circle cx="225" cy="76" r="3"/><path d="M245 92l5-14 5 14z"/></g></svg></div>
     <div class="event-copy"><div class="number">01 / FRIDAY</div><h3>Mata Pujan</h3><p>Friday, 11 December 2026</p><p class="time">8:00 AM</p><p>A prayer for blessings, joy and a beautiful beginning.</p></div></article>
    <article class="event reveal event-haldi">
-    <div class="event-art" aria-hidden="true"><svg viewBox="0 0 500 180" aria-hidden="true"><g fill="none" stroke="#b87a25" stroke-width="3"><path d="M60 170V65Q60 20 105 20Q150 20 150 65V170M45 170H165M75 65H135"/><path d="M345 170V65Q345 20 390 20Q435 20 435 65V170M330 170H450M360 65H420"/></g><g fill="#e6b74e"><circle cx="250" cy="60" r="20"/><path d="M220 85Q250 70 280 85L300 150H200Z"/><circle cx="190" cy="40" r="7"/><circle cx="310" cy="35" r="8"/><circle cx="180" cy="90" r="5"/><circle cx="320" cy="100" r="5"/></g><g fill="#8f9b47"><path d="M180 170q-25-40-40-12q25 0 40 12M320 170q25-40 40-12q-25 0-40 12"/></g></svg></div>
     <div class="event-copy"><div class="number">02 / FRIDAY</div><h3>Haldi</h3><p>Friday, 11 December 2026</p><p class="time">10:00 AM</p><p>Sunshine, turmeric and the happiest shades of yellow.</p></div></article>
    <article class="event reveal event-mayra">
-    <div class="event-art" aria-hidden="true"><svg viewBox="0 0 500 180" aria-hidden="true"><g fill="none" stroke="#a66b45" stroke-width="3"><path d="M65 170V60Q65 20 105 20Q145 20 145 60V170M50 170H160M80 60H130"/><path d="M355 170V60Q355 20 395 20Q435 20 435 60V170M340 170H450M370 60H420"/></g><g fill="#d9b56d" stroke="#a66b45" stroke-width="2"><rect x="190" y="80" width="120" height="75" rx="4"/><path d="M180 80L250 35L320 80Z"/><rect x="210" y="98" width="28" height="30"/><rect x="262" y="98" width="28" height="30"/><circle cx="250" cy="65" r="12"/></g><g fill="#a94e4b"><circle cx="190" cy="55" r="6"/><circle cx="310" cy="55" r="6"/><circle cx="170" cy="75" r="4"/><circle cx="330" cy="75" r="4"/></g></svg></div>
     <div class="event-copy"><div class="number">03 / FRIDAY</div><h3>Vinayak &amp; Mayra</h3><p>Friday, 11 December 2026</p><p class="time">2:00 PM</p><p>Tradition, family blessings and heartfelt celebration.</p></div></article>
    <article class="event reveal event-bandoli">
-    <div class="event-art" aria-hidden="true"><svg viewBox="0 0 500 180" aria-hidden="true"><g fill="none" stroke="#9b593e" stroke-width="3"><path d="M70 170V60Q70 20 110 20Q150 20 150 60V170M55 170H165M85 60H135"/><path d="M350 170V60Q350 20 390 20Q430 20 430 60V170M335 170H445M365 60H415"/></g><g fill="#d9b56d"><circle cx="235" cy="65" r="11"/><circle cx="265" cy="65" r="11"/><path d="M220 80L235 73L250 80L250 130H220Z"/><path d="M250 80L265 73L280 80L280 130H250Z"/></g><g fill="none" stroke="#a94e4b" stroke-width="3"><path d="M185 145Q250 160 315 145"/><path d="M195 145l-10 20M305 145l10 20"/></g><g fill="#d9b56d"><circle cx="205" cy="35" r="4"/><circle cx="250" cy="25" r="4"/><circle cx="295" cy="35" r="4"/><path d="M250 40l7 12h-14z"/></g></svg></div>
     <div class="event-copy"><div class="number">04 / FRIDAY</div><h3>Badi Bandoli</h3><p>Friday, 11 December 2026</p><p class="time">8:00 PM</p><p>An evening filled with music, colour and festive spirit.</p></div></article>
    <article class="event reveal event-hast" style="grid-column:1/-1;text-align:center;background-color:#f2e4ca"><div class="number">05 / THE WEDDING CEREMONY</div><h3>Hast Milap</h3><p>Saturday, 12 December 2026</p><p class="time">12:39 PM</p><p>The sacred moment two hands join and two families become one.</p></article>
   </div>

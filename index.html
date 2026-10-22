@@ -630,7 +630,7 @@ const languageStrings = [
   ['#makeGuestLink','Create WhatsApp invitation','WhatsApp निमंत्रण बनाएँ'],
   ['#celebration .eyebrow','With the blessings of Lord Ganesha','श्री गणेश जी के आशीर्वाद से'],
   ['#celebration .section-title','A New Chapter Begins','एक नए अध्याय की शुरुआत'],
-  ['.intro-card > p:first-child','With hearts full of joy and the blessings of our families, we invite you to join us as <strong>Khushbu</strong> and <strong>Harsh</strong> begin their beautiful journey together.','हर्ष और उल्लास तथा परिवारों के आशीर्वाद के साथ, हम आपको <strong>खुशबू</strong> और <strong>हर्ष</strong> की नई जीवन-यात्रा के शुभारंभ में शामिल होने के लिए सादर आमंत्रित करते हैं।'],
+  ['.intro-card > p:first-child','With hearts full of joy and the blessings of our families, we invite you to join us as <strong>Khushbu</strong> and <strong>Harsh</strong> begin their beautiful journey together.','हर्ष और उल्लास तथा परिवारों के आशीर्वाद के साथ, हम आपको <strong>खुश्बु</strong> और <strong>हर्ष</strong> की नई जीवन-यात्रा के शुभारंभ में शामिल होने के लिए सादर आमंत्रित करते हैं।'],
   ['.intro-card > p:last-child','May this union be blessed with love, harmony and everlasting happiness.','यह नया बंधन प्रेम, सौहार्द और आजीवन सुख-समृद्धि से परिपूर्ण रहे।'],
   ['.footer .copyright','© 2026 Pratham Diwan. All rights reserved.','© 2026 Pratham Diwan. सर्वाधिकार सुरक्षित।'],
   ['.scratch-section .eyebrow','A little surprise','एक छोटा-सा सरप्राइज़'],
@@ -639,7 +639,7 @@ const languageStrings = [
   ['.scratch-card .eyebrow','Save the date','तारीख याद रखें'],
   ['.scratch-card h3','Our forever starts on…','हमारा साथ शुरू होगा…'],
   ['.scratch-under span:first-child','THE WEDDING DAY','शुभ विवाह का दिन'],
-  ['.scratch-under span:last-child','KHUSHBU &amp; HARSH','खुशबू और हर्ष'],
+  ['.scratch-under span:last-child','KHUSHBU &amp; HARSH','खुश्बु और हर्ष'],
   ['.scratch-help','✦ Scratch across the panel to reveal the date ✦','✦ तारीख देखने के लिए यहाँ खुरचें ✦'],
   ['.countdown .eyebrow','The countdown to forever','हमेशा के साथ की उलटी गिनती'],
   ['.countdown .section-title','Until We Say “I Do”','शुभ विवाह तक'],
@@ -660,7 +660,7 @@ const languageStrings = [
   ['.photo:nth-child(1) .photo-label','A beautiful beginning','एक खूबसूरत शुरुआत'],
   ['.photo:nth-child(2) .photo-label','Together, always','हमेशा साथ-साथ'],
   ['.photo:nth-child(3) .photo-label','Our forever','हमारा हमेशा का साथ'],
-  ['.gallery-note','Every photograph holds a little piece of Khushbu & Harsh’s journey — from precious memories to the beginning of a lifetime together. May their life be filled with love, laughter, and endless togetherness.','हर तस्वीर खुशबू और हर्ष के सफ़र की एक प्यारी याद समेटे है — खूबसूरत लम्हों से लेकर जीवनभर के साथ की नई शुरुआत तक। उनके जीवन में हमेशा प्यार, हँसी और खुशियाँ बनी रहें।'],
+  ['.gallery-note','Every photograph holds a little piece of Khushbu & Harsh’s journey — from precious memories to the beginning of a lifetime together. May their life be filled with love, laughter, and endless togetherness.','हर तस्वीर खुश्बु और हर्ष के सफ़र की एक प्यारी याद समेटे है — खूबसूरत लम्हों से लेकर जीवनभर के साथ की नई शुरुआत तक। उनके जीवन में हमेशा प्यार, हँसी और खुशियाँ बनी रहें।'],
   ['.family .eyebrow','With love and blessings','स्नेह और आशीर्वाद सहित'],
   ['.family .section-title','Our Families','हमारे परिवार'],
   ['.family-card:first-child .eyebrow','The bride','वधू'],
@@ -675,7 +675,7 @@ const languageStrings = [
 const originalLanguageHTML = new Map();
 function applyLanguage(lang) {
   document.documentElement.lang = lang === 'hi' ? 'hi' : 'en';
-  document.title = lang === 'hi' ? 'खुशबू और हर्ष | शाही राजस्थानी विवाह' : 'Khushbu & Harsh | A Royal Rajasthani Wedding';
+  document.title = lang === 'hi' ? 'खुश्बु और हर्ष | शाही राजस्थानी विवाह' : 'Khushbu & Harsh | A Royal Rajasthani Wedding';
   languageStrings.forEach(([selector, en, hi], index) => {
     const el = document.querySelector(selector);
     if (!el) return;
